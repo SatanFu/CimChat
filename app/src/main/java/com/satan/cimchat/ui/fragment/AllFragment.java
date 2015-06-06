@@ -60,7 +60,7 @@ public class AllFragment extends Fragment {
                 ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
                 if (msg.getStatus().equals("success")) {
                     users = JSON.parseArray(msg.getData(), User.class);
-                    lvAllUser.setAdapter(new MyBaseAdapter(mContext, users));
+                    lvAllUser.setAdapter(new MyBaseAdapter(mContext, users, "all"));
                 }
             }
         });

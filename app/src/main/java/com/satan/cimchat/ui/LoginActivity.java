@@ -69,6 +69,9 @@ public class LoginActivity extends CIMMonitorActivity implements
                     if (msg.getStatus().equals("success")) {
                         user = JSON.parseObject(msg.getData(), User.class);
                         CIMPushManager.setAccount(LoginActivity.this, user.getAccount());
+                    } else {
+                        hideProgressDialog();
+                        Toast.makeText(mContext, msg.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -78,6 +81,8 @@ public class LoginActivity extends CIMMonitorActivity implements
     }
 
     private void doRegister() {
+        Intent intent = new Intent(mContext, RegisterActivity.class);
+        startActivity(intent);
     }
 
 

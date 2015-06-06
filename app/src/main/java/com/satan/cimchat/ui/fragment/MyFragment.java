@@ -53,7 +53,7 @@ public class MyFragment extends Fragment {
 
     private void initData() {
         SharedPreferences preferences = mContext.getSharedPreferences("config", Context.MODE_PRIVATE);
-        UserAPI.getFreind(preferences.getInt("id", -1), new TextHttpResponseHandler() {
+        UserAPI.getFriend(preferences.getInt("id", -1), new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 
@@ -64,7 +64,7 @@ public class MyFragment extends Fragment {
                 ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
                 if (msg.getStatus().equals("success")) {
                     users = JSON.parseArray(msg.getData(), User.class);
-                    lvMyFriends.setAdapter(new MyBaseAdapter(mContext, users));
+                    lvMyFriends.setAdapter(new MyBaseAdapter(mContext, users, "my"));
                 }
             }
         });

@@ -2,16 +2,17 @@ package com.satan.cimchat.network;
 
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.satan.cimchat.app.Constant;
 
 /**
  * Created by Administrator on 2015/5/31.
  */
 public class UserAPI extends BaseAPI {
 
-    private static String URL = "http://192.168.255.102:8080/ichat-server/cgi";
+    private static String URL = Constant.SERVER_URL + "/cgi";
 
     /**
-     * ×¢²á
+     * æ³¨å†Œ
      *
      * @param username
      * @param password
@@ -25,7 +26,7 @@ public class UserAPI extends BaseAPI {
     }
 
     /**
-     * µÇÂ¼
+     * ç™»å½•
      *
      * @param account
      * @param password
@@ -39,7 +40,7 @@ public class UserAPI extends BaseAPI {
     }
 
     /**
-     * »ñÈ¡ËùÓĞÓÃ»§
+     * è·å–æ‰€æœ‰ç”¨æˆ·
      *
      * @param responseHandler
      */
@@ -49,15 +50,29 @@ public class UserAPI extends BaseAPI {
     }
 
     /**
-     * »ñÈ¡ÎÒµÄÅóÓÑ
+     * è·å–æˆ‘çš„æœ‹å‹
      *
      * @param id
      * @param responseHandler
      */
-    public static void getFreind(int id, TextHttpResponseHandler responseHandler) {
+    public static void getFriend(int id, TextHttpResponseHandler responseHandler) {
         RequestParams params = new RequestParams();
         params.put("id", id);
         postAsyncHttpResponse(URL + "/user_getFriend.api", params, responseHandler);
+    }
+
+    /**
+     * è·å–æˆ‘çš„æœ‹å‹
+     *
+     * @param userId
+     * @param friendId
+     * @param responseHandler
+     */
+    public static void addFriend(int userId, int friendId, TextHttpResponseHandler responseHandler) {
+        RequestParams params = new RequestParams();
+        params.put("user_id", userId);
+        params.put("friend_id", friendId);
+        postAsyncHttpResponse(URL + "/user_addFriend.api", params, responseHandler);
     }
 
 }

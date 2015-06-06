@@ -87,13 +87,18 @@
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="slf4j-nop-1.7.5" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-22.2.0" level="project" />
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
-    <orderEntry type="library" exported="" name="fastjson-1.1.34.android" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.1.1" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="mina-core-2.0.7" level="project" />
+    <orderEntry type="library" exported="" name="fastjson-1.1.34.android" level="project" />
     <orderEntry type="library" exported="" name="android-async-http-1.4.6" level="project" />
     <orderEntry type="library" exported="" name="commons-lang-2.3" level="project" />
     <orderEntry type="library" exported="" name="slf4j-api-1.7.5" level="project" />
-    <orderEntry type="library" exported="" name="mina-core-2.0.7" level="project" />
+    <orderEntry type="library" exported="" name="material-dialogs-0.7.5.2" level="project" />
     <orderEntry type="library" exported="" name="log4j" level="project" />
   </component>
 </module>
