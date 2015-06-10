@@ -56,6 +56,7 @@ public class MyBaseAdapter extends BaseAdapter {
         convertView = LayoutInflater.from(mContext).inflate(R.layout.my_friends_item, parent, false);
         TextView username = (TextView) convertView.findViewById(R.id.tv_username);
         final Button addFriend = (Button) convertView.findViewById(R.id.btn_add_friend);
+        TextView msgCount = (TextView) convertView.findViewById(R.id.tv_msg_count);
         if (mType.equals("all")) {
             addFriend.setVisibility(View.VISIBLE);
         } else {

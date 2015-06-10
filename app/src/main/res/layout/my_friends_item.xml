@@ -32,4 +32,16 @@
         android:layout_marginRight="@dimen/dp10"
         android:text="加好友"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_msg_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/red_circle"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:visibility="gone" />
 </RelativeLayout>
