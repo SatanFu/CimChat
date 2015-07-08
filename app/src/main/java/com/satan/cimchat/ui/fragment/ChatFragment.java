@@ -1,6 +1,8 @@
 package com.satan.cimchat.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,31 +18,32 @@ import com.satan.cimchat.adapter.MyBaseAdapter;
 import com.satan.cimchat.model.ServerMessage;
 import com.satan.cimchat.model.User;
 import com.satan.cimchat.network.UserAPI;
+import com.satan.cimchat.ui.ChatActivity;
 
 import org.apache.http.Header;
 
 import java.util.List;
 
 
-public class AllFragment extends Fragment {
+public class ChatFragment extends Fragment {
 
-    private static AllFragment mAllFragment;
-    private ListView lvAllUser;
+    private static ChatFragment mChatFragment;
+    private ListView lvMyFriends;
     private Context mContext;
     private List<User> users;
 
-    public static AllFragment newInstance() {
-        if (mAllFragment == null) {
-            mAllFragment = new AllFragment();
+    public static ChatFragment newInstance() {
+        if (mChatFragment == null) {
+            mChatFragment = new ChatFragment();
         }
-        return mAllFragment;
+        return mChatFragment;
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_all, container, false);
+        View view = inflater.inflate(R.layout.fragment_my, container, false);
         mContext = getActivity();
         initView(view);
         initListener();
@@ -49,7 +52,8 @@ public class AllFragment extends Fragment {
     }
 
     private void initData() {
-        UserAPI.getAllUser(new TextHttpResponseHandler() {
+        SharedPreferences preferences = mContext.getSharedPreferences("config", Context.MODE_PRIVATE);
+        UserAPI.getFriend(preferences.getInt("id", -1), new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 
@@ -60,7 +64,7 @@ public class AllFragment extends Fragment {
                 ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
                 if (msg.getStatus().equals("success")) {
                     users = JSON.parseArray(msg.getData(), User.class);
-                    lvAllUser.setAdapter(new MyBaseAdapter(mContext, users, "all"));
+                    lvMyFriends.setAdapter(new MyBaseAdapter(mContext, users, "my"));
                 }
             }
         });
@@ -68,16 +72,20 @@ public class AllFragment extends Fragment {
 
 
     private void initView(View view) {
-        lvAllUser = (ListView) view.findViewById(R.id.lv_all_user);
+        lvMyFriends = (ListView) view.findViewById(R.id.lv_my_friends);
+
     }
 
     private void initListener() {
-        lvAllUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvMyFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                intent.putExtra("receiver", users.get(position));
+                mContext.startActivity(intent);
             }
         });
     }
+
 
 }

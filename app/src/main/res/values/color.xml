@@ -21,7 +21,7 @@
     <color name="darkgray">#AAAAAA</color>
     <color name="alpha">#00000000</color>
     <color name="chat_myself">#0D3EDE</color>
-    <color name="chat_other">#519A2D</color>
+    <color name="chat_other">#45c01a</color>
 
     <drawable name="silver">#00ffffff</drawable>
     <!-- 透明色 -->

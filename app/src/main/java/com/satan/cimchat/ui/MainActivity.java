@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.satan.cimchat.R;
 import com.satan.cimchat.core.android.CIMPushManager;
-import com.satan.cimchat.ui.fragment.AllFragment;
-import com.satan.cimchat.ui.fragment.MyFragment;
+import com.satan.cimchat.ui.fragment.ContactFragment;
+import com.satan.cimchat.ui.fragment.ChatFragment;
+import com.satan.cimchat.ui.fragment.ProfileFragment;
 
 public class MainActivity extends FragmentActivity {
 
@@ -31,7 +31,7 @@ public class MainActivity extends FragmentActivity {
         tvTitle = (TextView) findViewById(R.id.tv_title);
         rgTab = (RadioGroup) findViewById(R.id.rg_tab);
         tvTitle.setText(getSharedPreferences("config", MODE_PRIVATE).getString("username", ""));
-        switchContent(MyFragment.newInstance());
+        switchContent(ChatFragment.newInstance());
     }
 
     private void initListener() {
@@ -39,13 +39,14 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
-
-                    case R.id.rb_my:
-                        switchContent(MyFragment.newInstance());
+                    case R.id.rb_chat:
+                        switchContent(ChatFragment.newInstance());
                         break;
-
-                    case R.id.rb_all:
-                        switchContent(AllFragment.newInstance());
+                    case R.id.rb_contact:
+                        switchContent(ContactFragment.newInstance());
+                        break;
+                    case R.id.rb_profile:
+                        switchContent(ProfileFragment.newInstance());
                         break;
                 }
             }
