@@ -98,6 +98,7 @@
     <orderEntry type="library" exported="" name="commons-lang-2.3" level="project" />
     <orderEntry type="library" exported="" name="slf4j-api-1.7.5" level="project" />
     <orderEntry type="library" exported="" name="material-dialogs-0.7.5.2" level="project" />
+    <orderEntry type="library" exported="" name="design-22.2.0" level="project" />
     <orderEntry type="library" exported="" name="log4j" level="project" />
   </component>
 </module>

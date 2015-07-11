@@ -14,16 +14,15 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="cim"
-        android:theme="@style/GlobeTheme">
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.SplanshActivity"
+            android:name=".ui.MainActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -74,7 +73,7 @@
 
         <activity android:name=".ui.MyFriendsActivity" />
         <activity android:name=".ui.ChatActivity" />
-        <activity android:name=".ui.MainActivity" />
+        <activity android:name=".ui.SplanshActivity" />
         <activity android:name=".ui.RegisterActivity" />
     </application>
 

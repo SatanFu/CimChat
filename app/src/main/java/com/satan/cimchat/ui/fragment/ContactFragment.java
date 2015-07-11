@@ -19,6 +19,7 @@ import com.satan.cimchat.network.UserAPI;
 
 import org.apache.http.Header;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -49,21 +50,32 @@ public class ContactFragment extends Fragment {
     }
 
     private void initData() {
-        UserAPI.getAllUser(new TextHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+        users = new ArrayList<User>();
+        for (int i = 0; i < 30; i++) {
+            User user = new User();
+            user.setAccount("000" + i);
+            user.setId(i);
+            user.setUserName("000" + i);
+            user.setPassword("123");
+            users.add(user);
+        }
+        lvAllUser.setAdapter(new MyBaseAdapter(mContext, users, "all"));
 
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
-                if (msg.getStatus().equals("success")) {
-                    users = JSON.parseArray(msg.getData(), User.class);
-                    lvAllUser.setAdapter(new MyBaseAdapter(mContext, users, "all"));
-                }
-            }
-        });
+//        UserAPI.getAllUser(new TextHttpResponseHandler() {
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//                ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
+//                if (msg.getStatus().equals("success")) {
+//                    users = JSON.parseArray(msg.getData(), User.class);
+//                    lvAllUser.setAdapter(new MyBaseAdapter(mContext, users, "all"));
+//                }
+//            }
+//        });
     }
 
 
