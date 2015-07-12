@@ -3,43 +3,75 @@ package com.satan.cimchat.model;
 import java.io.Serializable;
 
 public class User implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String UserId;//
+	private String channelId;
+	private String nick;//
+	private int headIcon;//
+	private int group;
 
-    private int id;
-    private String account;
-    private String userName;
-    private String password;
+	public User(String UserId, String channelId, String nick, int headIcon,
+			int group) {
+		// TODO Auto-generated constructor stub
+		this.UserId = UserId;
+		this.channelId = channelId;
+		this.nick = nick;
+		this.headIcon = headIcon;
+		this.group = group;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public User() {
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	}
 
-    public String getAccount() {
-        return account;
-    }
+	public String getUserId() {
+		return UserId;
+	}
 
-    public void setAccount(String account) {
-        this.account = account;
-    }
+	public void setUserId(String userId) {
+		UserId = userId;
+	}
 
-    public String getUserName() {
-        return userName;
-    }
+	public String getChannelId() {
+		return channelId;
+	}
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getNick() {
+		return nick;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setNick(String nick) {
+		this.nick = nick;
+	}
 
+	public int getHeadIcon() {
+		return headIcon;
+	}
+
+	public void setHeadIcon(int headIcon) {
+		this.headIcon = headIcon;
+	}
+
+	public int getGroup() {
+		return group;
+	}
+
+	public void setGroup(int group) {
+		this.group = group;
+	}
+
+	@Override
+	public String toString() {
+		return "User [UserId=" + UserId + ", channelId=" + channelId
+				+ ", nick=" + nick + ", headIcon=" + headIcon + ", group="
+				+ group + "]";
+	}
 
 }

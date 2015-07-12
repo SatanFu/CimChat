@@ -12,8 +12,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.satan.cimchat.R;
@@ -22,18 +20,15 @@ import com.satan.cimchat.app.Constant;
 import com.satan.cimchat.core.android.CIMListenerManager;
 import com.satan.cimchat.core.android.CIMPushManager;
 import com.satan.cimchat.core.android.OnCIMMessageListener;
-import com.satan.cimchat.core.nio.constant.CIMConstant;
 import com.satan.cimchat.core.nio.mutual.Message;
 import com.satan.cimchat.core.nio.mutual.ReplyBody;
-import com.satan.cimchat.model.User;
+import com.satan.cimchat.model.UserOld;
 import com.satan.cimchat.network.BaseAPI;
 
 import org.apache.http.Header;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ChatActivity extends Activity implements OnCIMMessageListener {
 
@@ -46,7 +41,7 @@ public class ChatActivity extends Activity implements OnCIMMessageListener {
     private String sender;
     //    private String receiver;
     private Message message;
-    private User user;
+    private UserOld userOld;
 
 
     private HashMap<String, Object> apiParams = new HashMap<String, Object>();
@@ -89,7 +84,7 @@ public class ChatActivity extends Activity implements OnCIMMessageListener {
                 message = new Message();
                 message.setContent(msg.getText().toString());
                 message.setSender(sender);
-                message.setReceiver(user.getAccount());
+                message.setReceiver(userOld.getAccount());
                 message.setType(Constant.MessageType.TYPE_0);
                 try {
                     sendMessage();
@@ -104,8 +99,8 @@ public class ChatActivity extends Activity implements OnCIMMessageListener {
     private void initData() {
         sender = getSharedPreferences("config", MODE_PRIVATE).getString("account", "");
 //        receiver = getIntent().getStringExtra("receiver");
-        user = (User) getIntent().getSerializableExtra("receiver");
-        title.setText(user.getUserName());
+        userOld = (UserOld) getIntent().getSerializableExtra("receiver");
+        title.setText(userOld.getUserName());
 
 
     }
@@ -116,7 +111,7 @@ public class ChatActivity extends Activity implements OnCIMMessageListener {
         RequestParams params = new RequestParams();
         params.put("content", msg.getText().toString());
         params.put("sender", sender);
-        params.put("receiver", user.getAccount());
+        params.put("receiver", userOld.getAccount());
         params.put("type", Constant.MessageType.TYPE_0);
 
         Log.d("ChatActivity", params.toString());

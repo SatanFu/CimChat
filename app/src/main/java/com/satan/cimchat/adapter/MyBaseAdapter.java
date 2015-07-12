@@ -13,7 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.satan.cimchat.R;
 import com.satan.cimchat.model.ServerMessage;
-import com.satan.cimchat.model.User;
+import com.satan.cimchat.model.UserOld;
 import com.satan.cimchat.network.UserAPI;
 import com.satan.cimchat.util.DialogUtil;
 
@@ -27,23 +27,23 @@ import java.util.List;
 public class MyBaseAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<User> mUsers;
+    private List<UserOld> mUserOlds;
     private String mType;
 
-    public MyBaseAdapter(Context context, List<User> users, String type) {
+    public MyBaseAdapter(Context context, List<UserOld> userOlds, String type) {
         mContext = context;
-        mUsers = users;
+        mUserOlds = userOlds;
         mType = type;
     }
 
     @Override
     public int getCount() {
-        return mUsers.size();
+        return mUserOlds.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mUsers.get(position);
+        return mUserOlds.get(position);
     }
 
     @Override
@@ -65,10 +65,10 @@ public class MyBaseAdapter extends BaseAdapter {
         addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addFriend(mContext.getSharedPreferences("config", Context.MODE_PRIVATE).getInt("id", 0), mUsers.get(position).getId());
+                addFriend(mContext.getSharedPreferences("config", Context.MODE_PRIVATE).getInt("id", 0), mUserOlds.get(position).getId());
             }
         });
-        username.setText(mUsers.get(position).getUserName());
+        username.setText(mUserOlds.get(position).getUserName());
         return convertView;
     }
 

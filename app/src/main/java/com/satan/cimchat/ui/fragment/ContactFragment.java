@@ -2,33 +2,48 @@ package com.satan.cimchat.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-import com.loopj.android.http.TextHttpResponseHandler;
 import com.satan.cimchat.R;
+import com.satan.cimchat.adapter.ContactAdapter;
 import com.satan.cimchat.adapter.MyBaseAdapter;
-import com.satan.cimchat.model.ServerMessage;
+import com.satan.cimchat.model.RecentItem;
 import com.satan.cimchat.model.User;
-import com.satan.cimchat.network.UserAPI;
-
-import org.apache.http.Header;
+import com.satan.cimchat.model.UserOld;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
-public class ContactFragment extends Fragment {
+public class ContactFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static ContactFragment mContactFragment;
-    private ListView lvAllUser;
+    private RecyclerView rvContact;
     private Context mContext;
-    private List<User> users;
+    private List<User> mUsers;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 100) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(mContext, "刷新完成", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     public static ContactFragment newInstance() {
         if (mContactFragment == null) {
@@ -41,7 +56,7 @@ public class ContactFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_all, container, false);
+        View view = inflater.inflate(R.layout.recycler_view_swipe_refresh_layout, container, false);
         mContext = getActivity();
         initView(view);
         initListener();
@@ -50,16 +65,17 @@ public class ContactFragment extends Fragment {
     }
 
     private void initData() {
-        users = new ArrayList<User>();
+        mUsers = new ArrayList<User>();
         for (int i = 0; i < 30; i++) {
             User user = new User();
-            user.setAccount("000" + i);
-            user.setId(i);
-            user.setUserName("000" + i);
-            user.setPassword("123");
-            users.add(user);
+            user.setHeadIcon(i % 19);
+            user.setNick("000" + i);
+            user.setUserId("000" + i);
+
+            mUsers.add(user);
         }
-        lvAllUser.setAdapter(new MyBaseAdapter(mContext, users, "all"));
+
+        rvContact.setAdapter(new ContactAdapter(mContext, mUsers));
 
 //        UserAPI.getAllUser(new TextHttpResponseHandler() {
 //            @Override
@@ -71,8 +87,8 @@ public class ContactFragment extends Fragment {
 //            public void onSuccess(int statusCode, Header[] headers, String responseString) {
 //                ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
 //                if (msg.getStatus().equals("success")) {
-//                    users = JSON.parseArray(msg.getData(), User.class);
-//                    lvAllUser.setAdapter(new MyBaseAdapter(mContext, users, "all"));
+//                    userOlds = JSON.parseArray(msg.getData(), UserOld.class);
+//                    lvAllUser.setAdapter(new MyBaseAdapter(mContext, userOlds, "all"));
 //                }
 //            }
 //        });
@@ -80,16 +96,32 @@ public class ContactFragment extends Fragment {
 
 
     private void initView(View view) {
-        lvAllUser = (ListView) view.findViewById(R.id.lv_all_user);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.srl_view);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light,
+                android.R.color.holo_red_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light);
+        rvContact = (RecyclerView) view.findViewById(R.id.rv_list);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+        rvContact.setLayoutManager(layoutManager);
     }
 
     private void initListener() {
-        lvAllUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
+    @Override
+    public void onRefresh() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep((new Random().nextInt(10) + 1) * 1000);
+                    mHandler.sendEmptyMessage(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 }

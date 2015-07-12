@@ -30,8 +30,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView tvTitle;
-    private RadioGroup rgTab;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private TabLayout mTabLayout;
@@ -50,10 +48,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initTitle() {
-
+        setTitle("首页");
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle("首页");
         mToolbar.setNavigationIcon(R.drawable.ic_menu);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

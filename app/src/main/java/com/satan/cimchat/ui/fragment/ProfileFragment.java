@@ -14,7 +14,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.satan.cimchat.R;
 import com.satan.cimchat.adapter.MyBaseAdapter;
 import com.satan.cimchat.model.ServerMessage;
-import com.satan.cimchat.model.User;
+import com.satan.cimchat.model.UserOld;
 import com.satan.cimchat.network.UserAPI;
 
 import org.apache.http.Header;
@@ -27,7 +27,7 @@ public class ProfileFragment extends Fragment {
     private static ProfileFragment mProfileFragment;
     private ListView lvAllUser;
     private Context mContext;
-    private List<User> users;
+    private List<UserOld> userOlds;
 
     public static ProfileFragment newInstance() {
         if (mProfileFragment == null) {
@@ -59,8 +59,8 @@ public class ProfileFragment extends Fragment {
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
                 if (msg.getStatus().equals("success")) {
-                    users = JSON.parseArray(msg.getData(), User.class);
-                    lvAllUser.setAdapter(new MyBaseAdapter(mContext, users, "all"));
+                    userOlds = JSON.parseArray(msg.getData(), UserOld.class);
+                    lvAllUser.setAdapter(new MyBaseAdapter(mContext, userOlds, "all"));
                 }
             }
         });

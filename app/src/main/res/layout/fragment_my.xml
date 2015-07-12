@@ -4,9 +4,6 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/lv_my_friends"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <include layout="@layout/recycler_view_swipe_refresh_layout" />
 
 </LinearLayout>

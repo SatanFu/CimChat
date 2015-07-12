@@ -2,8 +2,6 @@ package com.satan.cimchat.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,12 +15,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.fastjson.JSON;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.satan.cimchat.R;
-import com.satan.cimchat.app.CIMMonitorActivity;
-import com.satan.cimchat.core.android.CIMPushManager;
-import com.satan.cimchat.core.nio.constant.CIMConstant;
-import com.satan.cimchat.core.nio.mutual.ReplyBody;
 import com.satan.cimchat.model.ServerMessage;
-import com.satan.cimchat.model.User;
+import com.satan.cimchat.model.UserOld;
 import com.satan.cimchat.network.UserAPI;
 import com.satan.cimchat.util.DialogUtil;
 
@@ -35,7 +29,7 @@ public class RegisterActivity extends Activity implements
     private EditText mUserName;
     private Button mRegister;
     private Context mContext;
-    private User mUser;
+    private UserOld mUserOld;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,8 +68,8 @@ public class RegisterActivity extends Activity implements
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
                     if (msg.getStatus().equals("success")) {
-                        mUser = JSON.parseObject(msg.getData(), User.class);
-                        new MaterialDialog.Builder(mContext).titleColorRes(R.color.blue).title(msg.getMessage()).backgroundColor(Color.WHITE).content("您的CIM号为:" + mUser.getAccount() + "，请记住此号码，登录时需要用到").positiveText("登录").negativeText("取消").callback(new MaterialDialog.ButtonCallback() {
+                        mUserOld = JSON.parseObject(msg.getData(), UserOld.class);
+                        new MaterialDialog.Builder(mContext).titleColorRes(R.color.blue).title(msg.getMessage()).backgroundColor(Color.WHITE).content("您的CIM号为:" + mUserOld.getAccount() + "，请记住此号码，登录时需要用到").positiveText("登录").negativeText("取消").callback(new MaterialDialog.ButtonCallback() {
                             @Override
                             public void onPositive(MaterialDialog dialog) {
 //                                Intent intent = new Intent(mContext, LoginActivity.class);
