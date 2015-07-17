@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.satan.cimchat.R;
 import com.satan.cimchat.adapter.ChatAdapter;
-import com.satan.cimchat.model.RecentItem;
+import com.satan.cimchat.model.Chat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class ChatFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private static ChatFragment mChatFragment;
     private RecyclerView rvChats;
     private Context mContext;
-    private List<RecentItem> mRecentItems;
+    private List<Chat> mRecentItems;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private Handler mHandler = new Handler() {
@@ -60,34 +60,17 @@ public class ChatFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void initData() {
-        mRecentItems = new ArrayList<RecentItem>();
+        mRecentItems = new ArrayList<Chat>();
         for (int i = 0; i < 30; i++) {
-            RecentItem recentItem = new RecentItem();
-            recentItem.setUserId("000" + i);
-            recentItem.setHeadImg(i % 19);
-            recentItem.setMessage("消息。。。。" + i);
-            recentItem.setName("000" + i);
+            Chat recentItem = new Chat();
+            recentItem.setId(Long.valueOf("0000" + i));
+            recentItem.setContent("消息。。。。" + i);
+            recentItem.setSender("0000" + i);
             recentItem.setTime(System.currentTimeMillis());
             recentItem.setNewNum(i);
             mRecentItems.add(recentItem);
         }
         rvChats.setAdapter(new ChatAdapter(mContext, mRecentItems));
-//        SharedPreferences preferences = mContext.getSharedPreferences("config", Context.MODE_PRIVATE);
-//        UserAPI.getFriend(preferences.getInt("id", -1), new TextHttpResponseHandler() {
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
-//                if (msg.getStatus().equals("success")) {
-//                    userOlds = JSON.parseArray(msg.getData(), UserOld.class);
-//                    lvMyFriends.setAdapter(new MyBaseAdapter(mContext, userOlds, "my"));
-//                }
-//            }
-//        });
     }
 
 

@@ -10,10 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.satan.cimchat.R;
-import com.satan.cimchat.model.RecentItem;
 import com.satan.cimchat.model.User;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,8 +36,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.tvUserName.setText(mUsers.get(position).getNick());
-        holder.ivHead.setImageResource(RecentItem.getHeads()[mUsers.get(position).getHeadIcon()]);
+        holder.tvUserName.setText(mUsers.get(position).getUsername());
+//        holder.ivHead.setImageResource(RecentItem.getHeads()[mUsers.get(position).getHeadIcon()]);
     }
 
 

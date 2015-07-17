@@ -10,7 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.satan.cimchat.R;
-import com.satan.cimchat.model.RecentItem;
+import com.satan.cimchat.model.Chat;
+import com.satan.cimchat.util.DateUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -21,10 +22,10 @@ import java.util.List;
  */
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> {
 
-    private List<RecentItem> mRecentItems;
+    private List<Chat> mRecentItems;
     private Context mContext;
 
-    public ChatAdapter(Context context, List<RecentItem> recentItems) {
+    public ChatAdapter(Context context, List<Chat> recentItems) {
         mRecentItems = recentItems;
         mContext = context;
     }
@@ -37,11 +38,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.tvMsg.setText(mRecentItems.get(position).getMessage());
+        holder.tvMsg.setText(mRecentItems.get(position).getContent());
         holder.tvMsgCount.setText(String.valueOf(mRecentItems.get(position).getNewNum()));
-        holder.tvTime.setText(new Date(mRecentItems.get(position).getTime()).toString());
-        holder.tvUserName.setText(mRecentItems.get(position).getName());
-        holder.ivHead.setImageResource(RecentItem.getHeads()[mRecentItems.get(position).getHeadImg()]);
+        holder.tvTime.setText(DateUtil.formatHourWithMinute(new Date(mRecentItems.get(position).getTime())));
+        holder.tvUserName.setText(mRecentItems.get(position).getSender());
+//        holder.ivHead.setImageResource(RecentItem.getHeads()[mRecentItems.get(position).getHeadImg()]);
     }
 
 

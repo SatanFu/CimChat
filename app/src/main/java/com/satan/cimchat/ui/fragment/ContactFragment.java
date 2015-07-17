@@ -11,16 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.satan.cimchat.R;
 import com.satan.cimchat.adapter.ContactAdapter;
-import com.satan.cimchat.adapter.MyBaseAdapter;
-import com.satan.cimchat.model.RecentItem;
 import com.satan.cimchat.model.User;
-import com.satan.cimchat.model.UserOld;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,30 +63,13 @@ public class ContactFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mUsers = new ArrayList<User>();
         for (int i = 0; i < 30; i++) {
             User user = new User();
-            user.setHeadIcon(i % 19);
-            user.setNick("000" + i);
-            user.setUserId("000" + i);
+            user.setUsername("000" + i);
+            user.setId(Long.valueOf("0000" + i));
 
             mUsers.add(user);
         }
 
         rvContact.setAdapter(new ContactAdapter(mContext, mUsers));
-
-//        UserAPI.getAllUser(new TextHttpResponseHandler() {
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
-//                if (msg.getStatus().equals("success")) {
-//                    userOlds = JSON.parseArray(msg.getData(), UserOld.class);
-//                    lvAllUser.setAdapter(new MyBaseAdapter(mContext, userOlds, "all"));
-//                }
-//            }
-//        });
     }
 
 

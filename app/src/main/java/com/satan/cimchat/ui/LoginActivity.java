@@ -18,7 +18,7 @@ import com.satan.cimchat.core.android.CIMPushManager;
 import com.satan.cimchat.core.nio.constant.CIMConstant;
 import com.satan.cimchat.core.nio.mutual.ReplyBody;
 import com.satan.cimchat.model.ServerMessage;
-import com.satan.cimchat.model.UserOld;
+import com.satan.cimchat.model.User;
 import com.satan.cimchat.network.UserAPI;
 
 import org.apache.http.Header;
@@ -31,7 +31,7 @@ public class LoginActivity extends CIMMonitorActivity implements
     private Button mLogin;
     private Button mRegister;
     private Context mContext;
-    private UserOld userOld;
+    private User user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,8 +67,8 @@ public class LoginActivity extends CIMMonitorActivity implements
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
                     if (msg.getStatus().equals("success")) {
-                        userOld = JSON.parseObject(msg.getData(), UserOld.class);
-                        CIMPushManager.setAccount(LoginActivity.this, userOld.getAccount());
+                        user = JSON.parseObject(msg.getData(), User.class);
+                        CIMPushManager.setAccount(LoginActivity.this, user.getAccount());
                     } else {
                         hideProgressDialog();
                         Toast.makeText(mContext, msg.getMessage(), Toast.LENGTH_LONG).show();
@@ -93,9 +93,9 @@ public class LoginActivity extends CIMMonitorActivity implements
                 hideProgressDialog();
                 SharedPreferences spf = getSharedPreferences("config", MODE_PRIVATE);
                 SharedPreferences.Editor editor = spf.edit();
-                editor.putString("account", userOld.getAccount());
-                editor.putString("username", userOld.getUserName());
-                editor.putInt("id", userOld.getId());
+                editor.putString("account", user.getAccount());
+                editor.putString("username", user.getUsername());
+                editor.putLong("id", user.getId());
                 editor.commit();
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
