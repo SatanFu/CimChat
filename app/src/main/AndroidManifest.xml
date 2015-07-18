@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.satan.cimchat"
-    android:versionCode="5"
-    android:versionName="2.1.0">
+    package="com.satan.cimchat">
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="22" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -22,7 +17,7 @@
         android:label="CimChat"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.SplanshActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -73,7 +68,7 @@
 
         <activity android:name=".ui.MyFriendsActivity" />
         <activity android:name=".ui.ChatActivity" />
-        <activity android:name=".ui.SplanshActivity" />
+        <activity android:name=".ui.MainActivity" />
         <activity android:name=".ui.RegisterActivity" />
     </application>
 

@@ -11,10 +11,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 
+import com.orhanobut.logger.Logger;
+import com.satan.cimchat.app.BaseApplication;
 import com.satan.cimchat.core.nio.constant.CIMConstant;
 import com.satan.cimchat.core.nio.mutual.Message;
 import com.satan.cimchat.core.nio.mutual.ReplyBody;
 import com.satan.cimchat.core.nio.mutual.SentBody;
+import com.satan.cimchat.util.ChangeUtil;
 
 
 /**
@@ -146,10 +149,11 @@ public abstract class CIMEnventListenerReceiver extends BroadcastReceiver
 
     private void filterType999Message(Message message) {
         if (CIMConstant.MessageType.TYPE_999.equals(message.getType())) {
-            CIMDataConfig.putBoolean(context, CIMDataConfig.KEY_MANUAL_STOP,
-                    true);
+            CIMDataConfig.putBoolean(context, CIMDataConfig.KEY_MANUAL_STOP, true);
+        } else {
+            BaseApplication.getMessageDao(context).insert(ChangeUtil.NioMsgToMyMsg(message));
         }
-
+        Logger.e(message.getContent() + "----" + message.getReceiver() + "----" + message.getSender());
         onMessageReceived(message);
     }
 

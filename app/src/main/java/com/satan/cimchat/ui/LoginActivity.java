@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.orhanobut.logger.Logger;
 import com.satan.cimchat.R;
 import com.satan.cimchat.app.CIMMonitorActivity;
 import com.satan.cimchat.core.android.CIMPushManager;
@@ -65,6 +66,7 @@ public class LoginActivity extends CIMMonitorActivity implements
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    Logger.e(responseString);
                     ServerMessage msg = JSON.parseObject(responseString, ServerMessage.class);
                     if (msg.getStatus().equals("success")) {
                         user = JSON.parseObject(msg.getData(), User.class);

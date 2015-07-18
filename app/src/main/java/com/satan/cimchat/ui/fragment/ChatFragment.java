@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.satan.cimchat.R;
 import com.satan.cimchat.adapter.ChatAdapter;
+import com.satan.cimchat.app.BaseApplication;
 import com.satan.cimchat.model.Chat;
 
 import java.util.ArrayList;
@@ -27,7 +28,8 @@ public class ChatFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private static ChatFragment mChatFragment;
     private RecyclerView rvChats;
     private Context mContext;
-    private List<Chat> mRecentItems;
+    private List<Chat> mChats;
+    private ChatAdapter mChatAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private Handler mHandler = new Handler() {
@@ -60,17 +62,9 @@ public class ChatFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void initData() {
-        mRecentItems = new ArrayList<Chat>();
-        for (int i = 0; i < 30; i++) {
-            Chat recentItem = new Chat();
-            recentItem.setId(Long.valueOf("0000" + i));
-            recentItem.setContent("消息。。。。" + i);
-            recentItem.setSender("0000" + i);
-            recentItem.setTime(System.currentTimeMillis());
-            recentItem.setNewNum(i);
-            mRecentItems.add(recentItem);
-        }
-        rvChats.setAdapter(new ChatAdapter(mContext, mRecentItems));
+        mChats = BaseApplication.getChatDao(mContext).loadAll();
+        mChatAdapter = new ChatAdapter(mContext, mChats);
+        rvChats.setAdapter(mChatAdapter);
     }
 
 

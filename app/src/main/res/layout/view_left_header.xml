@@ -14,7 +14,7 @@
         app:border_width="2dp" />
 
     <TextView
-        android:id="@+id/tv_nickname"
+        android:id="@+id/tv_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_user_head"

@@ -55,14 +55,14 @@ public class UserAPI extends BaseAPI {
      * @param id
      * @param responseHandler
      */
-    public static void getFriend(int id, TextHttpResponseHandler responseHandler) {
+    public static void getFriend(long id, TextHttpResponseHandler responseHandler) {
         RequestParams params = new RequestParams();
         params.put("id", id);
         postAsyncHttpResponse(URL + "/user_getFriend.api", params, responseHandler);
     }
 
     /**
-     * 获取我的朋友
+     * 添加我的朋友
      *
      * @param userId
      * @param friendId

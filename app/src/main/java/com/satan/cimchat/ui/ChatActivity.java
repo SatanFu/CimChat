@@ -1,39 +1,44 @@
 package com.satan.cimchat.ui;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.orhanobut.logger.Logger;
 import com.satan.cimchat.R;
 import com.satan.cimchat.adapter.ChatMsgListViewAdapter;
+import com.satan.cimchat.app.BaseApplication;
 import com.satan.cimchat.app.Constant;
 import com.satan.cimchat.core.android.CIMListenerManager;
 import com.satan.cimchat.core.android.CIMPushManager;
 import com.satan.cimchat.core.android.OnCIMMessageListener;
 import com.satan.cimchat.core.nio.mutual.Message;
 import com.satan.cimchat.core.nio.mutual.ReplyBody;
-import com.satan.cimchat.model.User;
+import com.satan.cimchat.db.MessageDao;
+import com.satan.cimchat.model.Contact;
 import com.satan.cimchat.network.BaseAPI;
+import com.satan.cimchat.util.ChangeUtil;
 
 import org.apache.http.Header;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class ChatActivity extends Activity implements OnCIMMessageListener {
+public class ChatActivity extends AppCompatActivity implements OnCIMMessageListener {
 
     private Button send;
-    private TextView title;
     private EditText msg;
     private ListView lv;
     protected ChatMsgListViewAdapter adapter;
@@ -41,7 +46,9 @@ public class ChatActivity extends Activity implements OnCIMMessageListener {
     private String sender;
     //    private String receiver;
     private Message message;
-    private User user;
+    private Contact contact;
+    private Toolbar mToolbar;
+    private Context mContext;
 
 
     private HashMap<String, Object> apiParams = new HashMap<String, Object>();
@@ -54,19 +61,33 @@ public class ChatActivity extends Activity implements OnCIMMessageListener {
         super.onCreate(savedInstanceState);
         CIMListenerManager.registerMessageListener(this, this);
         setContentView(R.layout.activity_chat);
-        initialize();
+        mContext = this;
+        initTitle();
+        initView();
 
         initData();
     }
 
+    private void initTitle() {
 
-    private void initialize() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.icon_arrow);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+
+    private void initView() {
 
         list = new ArrayList<Message>();
 
 
         send = (Button) findViewById(R.id.send);
-        title = (TextView) findViewById(R.id.title);
         msg = (EditText) findViewById(R.id.msg);
         lv = (ListView) findViewById(R.id.lv);
 
@@ -76,15 +97,10 @@ public class ChatActivity extends Activity implements OnCIMMessageListener {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.d("ChatActivity", "send:" + sender + " content:" + msg.getText().toString() + " receiver:" + receiver + " type:" + Constant.MessageType.TYPE_0);
-//                apiParams.put("content", msg.getText().toString());
-//                apiParams.put("sender", sender);
-//                apiParams.put("receiver", receiver);
-//                apiParams.put("type", Constant.MessageType.TYPE_0);
                 message = new Message();
                 message.setContent(msg.getText().toString());
                 message.setSender(sender);
-                message.setReceiver(user.getAccount());
+                message.setReceiver(contact.getAccount());
                 message.setType(Constant.MessageType.TYPE_0);
                 try {
                     sendMessage();
@@ -98,11 +114,19 @@ public class ChatActivity extends Activity implements OnCIMMessageListener {
 
     private void initData() {
         sender = getSharedPreferences("config", MODE_PRIVATE).getString("account", "");
-//        receiver = getIntent().getStringExtra("receiver");
-        user = (User) getIntent().getSerializableExtra("receiver");
-        title.setText(user.getUsername());
+        contact = (Contact) getIntent().getSerializableExtra("receiver");
+        setTitle(contact.getUsername());
 
 
+        List<com.satan.cimchat.model.Message> messages = BaseApplication
+                .getMessageDao(mContext)
+                .queryBuilder()
+                .whereOr(MessageDao.Properties.Sender.eq(contact.getAccount()),MessageDao.Properties.Sender.eq(sender)).list();
+        for (com.satan.cimchat.model.Message msg : messages) {
+            list.add(ChangeUtil.MyMsgToNioMsg(msg));
+            Logger.e(msg.getContent() + "---" + msg.getSender() + "----" + msg.getReceiver());
+        }
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -111,10 +135,9 @@ public class ChatActivity extends Activity implements OnCIMMessageListener {
         RequestParams params = new RequestParams();
         params.put("content", msg.getText().toString());
         params.put("sender", sender);
-        params.put("receiver", user.getAccount());
+        params.put("receiver", contact.getAccount());
         params.put("type", Constant.MessageType.TYPE_0);
 
-        Log.d("ChatActivity", params.toString());
         BaseAPI.postAsyncHttpResponse(SEND_MESSAGE_API_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -124,7 +147,7 @@ public class ChatActivity extends Activity implements OnCIMMessageListener {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.e("ChatActivity", responseString);
-
+                BaseApplication.getMessageDao(mContext).insert(ChangeUtil.NioMsgToMyMsg(message));
                 list.add(message);
                 adapter.notifyDataSetChanged();
                 lv.setSelection(lv.getTop());

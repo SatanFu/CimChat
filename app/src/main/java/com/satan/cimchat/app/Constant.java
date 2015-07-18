@@ -6,9 +6,9 @@ package com.satan.cimchat.app;
 public interface Constant {
 
     // 服务端web地址
-    public static final String SERVER_URL = "http://192.168.15.102:8080/ichat-server";
+    public static final String SERVER_URL = "http://192.168.255.109:8080/ichat-server";
     // 服务端IP地址
-    public static final String CIM_SERVER_HOST = "192.168.15.102";
+    public static final String CIM_SERVER_HOST = "192.168.255.109";
 
     // 注意，这里的端口不是tomcat的端口，CIM端口在服务端spring-cim.xml中配置的，没改动就使用默认的23456
     public static final int CIM_SERVER_PORT = 8088;

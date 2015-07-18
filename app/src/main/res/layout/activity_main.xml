@@ -17,35 +17,4 @@
         app:headerLayout="@layout/view_left_header"
         app:menu="@menu/drawer_view" />
 
-    <!--<TextView-->
-    <!--android:id="@+id/tv_title"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="48dp"-->
-    <!--android:background="@color/chat_other"-->
-    <!--android:gravity="center"-->
-    <!--android:text="satan"-->
-    <!--android:textSize="18sp" />-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/ll_bottom"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="59dp"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:orientation="vertical">-->
-
-    <!--<View-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="1dp"-->
-    <!--android:background="@color/darkgray" />-->
-
-    <!--<include layout="@layout/layout_bottom" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/ll_content"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_above="@+id/ll_bottom"-->
-    <!--android:layout_below="@+id/tv_title"-->
-    <!--android:orientation="vertical" />-->
 </android.support.v4.widget.DrawerLayout>
