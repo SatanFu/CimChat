@@ -16,6 +16,9 @@ import com.satan.cimchat.core.android.CIMEnventListenerReceiver;
 import com.satan.cimchat.core.android.CIMListenerManager;
 import com.satan.cimchat.core.nio.mutual.Message;
 import com.satan.cimchat.core.nio.mutual.ReplyBody;
+import com.satan.cimchat.db.ContactDao;
+import com.satan.cimchat.model.Contact;
+import com.satan.cimchat.ui.ChatActivity;
 import com.satan.cimchat.ui.MyFriendsActivity;
 import com.satan.cimchat.util.ChangeUtil;
 
@@ -72,13 +75,15 @@ public final class CustomCIMMessageReceiver extends CIMEnventListenerReceiver {
     private void showNotify(Context context, Message msg) {
 
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        String title = "系统消息";
+        Contact contact = BaseApplication.getContactDao(context).queryBuilder().where(ContactDao.Properties.Account.eq(msg.getSender())).unique();
+        String title = contact.getUsername();
 
         Notification notification = new Notification(R.drawable.icon_notify, title, msg.getTimestamp());
         notification.defaults = Notification.DEFAULT_LIGHTS;
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
-        Intent notificationIntent = new Intent(context, MyFriendsActivity.class);
+        Intent notificationIntent = new Intent(context, ChatActivity.class);
+        notificationIntent.putExtra("receiver", msg.getSender());
         PendingIntent contentIntent = PendingIntent.getActivity(context, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         notification.contentIntent = contentIntent;
         notification.setLatestEventInfo(context, title, msg.getContent(), contentIntent);

@@ -67,7 +67,8 @@
         </receiver>
 
         <activity android:name=".ui.MyFriendsActivity" />
-        <activity android:name=".ui.ChatActivity" />
+        <activity android:name=".ui.ChatActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".ui.MainActivity" />
         <activity android:name=".ui.RegisterActivity" />
     </application>

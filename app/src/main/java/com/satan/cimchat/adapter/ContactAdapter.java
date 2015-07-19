@@ -44,7 +44,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ChatActivity.class);
-                intent.putExtra("receiver",mContact.get(position));
+                intent.putExtra("receiver", mContact.get(position).getAccount());
                 mContext.startActivity(intent);
             }
         });

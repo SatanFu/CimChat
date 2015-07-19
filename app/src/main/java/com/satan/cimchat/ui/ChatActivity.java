@@ -25,9 +25,13 @@ import com.satan.cimchat.core.android.CIMPushManager;
 import com.satan.cimchat.core.android.OnCIMMessageListener;
 import com.satan.cimchat.core.nio.mutual.Message;
 import com.satan.cimchat.core.nio.mutual.ReplyBody;
+import com.satan.cimchat.db.ChatDao;
+import com.satan.cimchat.db.ContactDao;
 import com.satan.cimchat.db.MessageDao;
+import com.satan.cimchat.model.Chat;
 import com.satan.cimchat.model.Contact;
 import com.satan.cimchat.network.BaseAPI;
+import com.satan.cimchat.ui.fragment.ChatFragment;
 import com.satan.cimchat.util.ChangeUtil;
 
 import org.apache.http.Header;
@@ -114,19 +118,28 @@ public class ChatActivity extends AppCompatActivity implements OnCIMMessageListe
 
     private void initData() {
         sender = getSharedPreferences("config", MODE_PRIVATE).getString("account", "");
-        contact = (Contact) getIntent().getSerializableExtra("receiver");
+        String receiver = getIntent().getStringExtra("receiver");
+        Chat chat = BaseApplication.getChatDao(mContext).queryBuilder().where(ChatDao.Properties.Sender.eq(receiver)).unique();
+        if (chat != null) {
+            chat.setNewNum(0);
+            BaseApplication.getChatDao(mContext).update(chat);
+            Intent intent = new Intent();
+            intent.setAction(ChatFragment.NEW_MSG_ACTION);
+            mContext.sendBroadcast(intent);
+        }
+        contact = BaseApplication.getContactDao(mContext).queryBuilder().where(ContactDao.Properties.Account.eq(receiver)).unique();
         setTitle(contact.getUsername());
 
 
         List<com.satan.cimchat.model.Message> messages = BaseApplication
                 .getMessageDao(mContext)
                 .queryBuilder()
-                .whereOr(MessageDao.Properties.Sender.eq(contact.getAccount()),MessageDao.Properties.Sender.eq(sender)).list();
+                .whereOr(MessageDao.Properties.Sender.eq(contact.getAccount()), MessageDao.Properties.Sender.eq(sender)).list();
         for (com.satan.cimchat.model.Message msg : messages) {
             list.add(ChangeUtil.MyMsgToNioMsg(msg));
-            Logger.e(msg.getContent() + "---" + msg.getSender() + "----" + msg.getReceiver());
         }
         adapter.notifyDataSetChanged();
+        lv.setSelection(list.size() - 1);
     }
 
 
@@ -148,6 +161,27 @@ public class ChatActivity extends AppCompatActivity implements OnCIMMessageListe
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.e("ChatActivity", responseString);
                 BaseApplication.getMessageDao(mContext).insert(ChangeUtil.NioMsgToMyMsg(message));
+
+                Chat chat = BaseApplication.getChatDao(mContext).queryBuilder().where(ChatDao.Properties.Sender.eq(message.getReceiver())).unique();
+                if (chat != null) {
+                    chat.setContent(message.getContent());
+                    chat.setNewNum(0);
+                    chat.setSender(message.getReceiver());
+                    chat.setTime(message.getTimestamp());
+                    BaseApplication.getChatDao(mContext).update(chat);
+                } else {
+                    chat = new Chat();
+                    chat.setContent(message.getContent());
+                    chat.setNewNum(0);
+                    chat.setSender(message.getReceiver());
+                    chat.setTime(message.getTimestamp());
+                    BaseApplication.getChatDao(mContext).insert(chat);
+                }
+
+                Intent intent = new Intent();
+                intent.setAction(ChatFragment.NEW_MSG_ACTION);
+                mContext.sendBroadcast(intent);
+
                 list.add(message);
                 adapter.notifyDataSetChanged();
                 lv.setSelection(lv.getTop());
@@ -168,7 +202,26 @@ public class ChatActivity extends AppCompatActivity implements OnCIMMessageListe
             startActivity(intent);
             this.finish();
         } else {
-            MediaPlayer.create(this, R.raw.classic).start();
+
+            Chat chat = BaseApplication.getChatDao(mContext).queryBuilder().where(ChatDao.Properties.Sender.eq(message.getSender())).unique();
+            if (chat != null) {
+                chat.setContent(message.getContent());
+                chat.setNewNum(0);
+                chat.setSender(message.getSender());
+                chat.setTime(message.getTimestamp());
+                BaseApplication.getChatDao(mContext).update(chat);
+            } else {
+                chat = new Chat();
+                chat.setContent(message.getContent());
+                chat.setNewNum(0);
+                chat.setSender(message.getSender());
+                chat.setTime(message.getTimestamp());
+                BaseApplication.getChatDao(mContext).insert(chat);
+            }
+
+            Intent intent = new Intent();
+            intent.setAction(ChatFragment.NEW_MSG_ACTION);
+            mContext.sendBroadcast(intent);
             list.add(message);
             adapter.notifyDataSetChanged();
             lv.setSelection(lv.getTop());

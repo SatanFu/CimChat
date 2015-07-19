@@ -1,6 +1,7 @@
 package com.satan.cimchat.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.satan.cimchat.R;
+import com.satan.cimchat.app.BaseApplication;
+import com.satan.cimchat.db.ChatDao;
+import com.satan.cimchat.db.ContactDao;
 import com.satan.cimchat.model.Chat;
+import com.satan.cimchat.model.Contact;
+import com.satan.cimchat.ui.ChatActivity;
 import com.satan.cimchat.util.DateUtil;
 
 import java.util.Date;
@@ -37,11 +44,26 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
+        Logger.e(mRecentItems.get(position).getContent() + "----" + mRecentItems.get(position).getNewNum());
         holder.tvMsg.setText(mRecentItems.get(position).getContent());
-        holder.tvMsgCount.setText(String.valueOf(mRecentItems.get(position).getNewNum()));
+        if (mRecentItems.get(position).getNewNum() == 0) {
+            holder.tvMsgCount.setVisibility(View.GONE);
+        } else {
+            holder.tvMsgCount.setVisibility(View.VISIBLE);
+            holder.tvMsgCount.setText(String.valueOf(mRecentItems.get(position).getNewNum()));
+        }
         holder.tvTime.setText(DateUtil.formatHourWithMinute(new Date(mRecentItems.get(position).getTime())));
-        holder.tvUserName.setText(mRecentItems.get(position).getSender());
+        Contact contact = BaseApplication.getContactDao(mContext).queryBuilder().where(ContactDao.Properties.Account.eq(mRecentItems.get(position).getSender())).unique();
+        holder.tvUserName.setText(contact.getUsername());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                intent.putExtra("receiver", mRecentItems.get(position).getSender());
+                mContext.startActivity(intent);
+            }
+        });
 //        holder.ivHead.setImageResource(RecentItem.getHeads()[mRecentItems.get(position).getHeadImg()]);
     }
 
@@ -61,14 +83,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
         public MyViewHolder(View itemView) {
             super(itemView);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mContext, "onItemClick", Toast.LENGTH_SHORT).show();
-                }
-            });
-
             tvMsg = (TextView) itemView.findViewById(R.id.tv_msg);
             tvUserName = (TextView) itemView.findViewById(R.id.tv_username);
             tvMsgCount = (TextView) itemView.findViewById(R.id.tv_msg_count);

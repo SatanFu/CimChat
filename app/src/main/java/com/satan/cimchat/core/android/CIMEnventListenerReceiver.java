@@ -7,16 +7,21 @@ import android.app.ActivityManager.RunningTaskInfo;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 
 import com.orhanobut.logger.Logger;
+import com.satan.cimchat.R;
 import com.satan.cimchat.app.BaseApplication;
 import com.satan.cimchat.core.nio.constant.CIMConstant;
 import com.satan.cimchat.core.nio.mutual.Message;
 import com.satan.cimchat.core.nio.mutual.ReplyBody;
 import com.satan.cimchat.core.nio.mutual.SentBody;
+import com.satan.cimchat.db.ChatDao;
+import com.satan.cimchat.model.Chat;
+import com.satan.cimchat.ui.fragment.ChatFragment;
 import com.satan.cimchat.util.ChangeUtil;
 
 
@@ -151,7 +156,29 @@ public abstract class CIMEnventListenerReceiver extends BroadcastReceiver
         if (CIMConstant.MessageType.TYPE_999.equals(message.getType())) {
             CIMDataConfig.putBoolean(context, CIMDataConfig.KEY_MANUAL_STOP, true);
         } else {
+            MediaPlayer.create(context, R.raw.classic).start();
             BaseApplication.getMessageDao(context).insert(ChangeUtil.NioMsgToMyMsg(message));
+            Chat chat = BaseApplication.getChatDao(context).queryBuilder().where(ChatDao.Properties.Sender.eq(message.getSender())).unique();
+            if (chat == null) {
+                chat = new Chat();
+                chat.setNewNum(1);
+                Logger.e(chat.getNewNum() + "-----num---null");
+                chat.setTime(message.getTimestamp());
+                chat.setSender(message.getSender());
+                chat.setContent(message.getContent());
+                BaseApplication.getChatDao(context).insert(chat);
+            } else {
+                Logger.e(chat.getNewNum() + "-----num");
+                chat.setNewNum(chat.getNewNum() + 1);
+                chat.setTime(message.getTimestamp());
+                chat.setSender(message.getSender());
+                chat.setContent(message.getContent());
+                BaseApplication.getChatDao(context).update(chat);
+            }
+
+            Intent intent = new Intent();
+            intent.setAction(ChatFragment.NEW_MSG_ACTION);
+            context.sendBroadcast(intent);
         }
         Logger.e(message.getContent() + "----" + message.getReceiver() + "----" + message.getSender());
         onMessageReceived(message);

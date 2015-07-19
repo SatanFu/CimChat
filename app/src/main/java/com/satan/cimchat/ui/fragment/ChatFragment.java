@@ -1,6 +1,11 @@
 package com.satan.cimchat.ui.fragment;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,12 +30,15 @@ import java.util.Random;
 
 public class ChatFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
+
+    public static final String NEW_MSG_ACTION = "com.satan.cimchat.new_msg";
     private static ChatFragment mChatFragment;
     private RecyclerView rvChats;
     private Context mContext;
     private List<Chat> mChats;
     private ChatAdapter mChatAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private NewMsgReceiver mNewMsgReciver;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -47,6 +55,16 @@ public class ChatFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mChatFragment = new ChatFragment();
         }
         return mChatFragment;
+    }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mNewMsgReciver = new NewMsgReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(NEW_MSG_ACTION);
+        activity.registerReceiver(mNewMsgReciver, intentFilter);
     }
 
 
@@ -100,5 +118,23 @@ public class ChatFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
         }).start();
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().unregisterReceiver(mNewMsgReciver);
+    }
+
+    class NewMsgReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            List<Chat> newChats = BaseApplication.getChatDao(mContext).loadAll();
+            mChats.clear();
+            mChats.addAll(newChats);
+            mChatAdapter.notifyDataSetChanged();
+        }
     }
 }
